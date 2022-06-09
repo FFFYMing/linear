@@ -232,8 +232,10 @@ def read_data_fromfile(N, M):
     inputf = torch.zeros([N,2*(M-9)*(M-9)])
     for i in range(N):
         #print(i)
-        pdu = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_u_test"+str(i+1)+".csv", header=0, sep=' ')
-        pdv = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_v_test"+str(i+1)+".csv", header=0, sep=' ')
+        #pdu = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_u_test"+str(i+1)+".csv", header=0, sep=' ')
+        #pdv = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_v_test"+str(i+1)+".csv", header=0, sep=' ')
+        pdu = pd.read_csv("./"+base_dir+"/hom_u_test"+str(i+1)+".csv", header=0, sep=' ')
+        pdv = pd.read_csv("./"+base_dir+"/hom_v_test"+str(i+1)+".csv", header=0, sep=' ')
         pdu = torch.tensor(pdu["content"])
         pdv = torch.tensor(pdv["content"])
         pdu = torch.reshape(pdu, (M, M))
@@ -245,8 +247,10 @@ def read_data_fromfile(N, M):
         pduv= torch.row_stack((pdu, pdv))
         inputu[i,:] = pduv.transpose(1,0)
 
-        pdf1 = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_f1_test"+str(i+1)+".csv", header=0, sep=' ')
-        pdf2 = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_f2_test"+str(i+1)+".csv", header=0, sep=' ')
+        #pdf1 = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_f1_test"+str(i+1)+".csv", header=0, sep=' ')
+        #pdf2 = pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_f2_test"+str(i+1)+".csv", header=0, sep=' ')
+        pdf1 = pd.read_csv("./"+base_dir+"/hom_f1_test"+str(i+1)+".csv", header=0, sep=' ')
+        pdf2 = pd.read_csv("./"+base_dir+"/hom_f2_test"+str(i+1)+".csv", header=0, sep=' ')
         pdf1 = torch.tensor(pdf1["content"])
         pdf2 = torch.tensor(pdf2["content"])
         pdf1 = torch.reshape(pdf1, (M, M))
@@ -273,22 +277,23 @@ def LR_schedule(learning_rate,steps,scheduler_step,scheduler_gamma):
 
 print('Start initializing.')
 time_starti=time.time()
-base_dir="smallsamples20_uvonly_baby80_0"
+base_dir="smallsamples20_uvonly_baby30_0"
 save_base_dir="test/"
 model_filename=save_base_dir+"nnParameters.ckpt"
-n_samples=4000
-batch_size=400
-learning_rate=5e-3 #usually 1e-3, 2e-3, 5e-3
+n_samples=900
+batch_size=90
+learning_rate=1e-3 #usually 1e-3, 2e-3, 5e-3
 epochs=10000
 step_size=100
 gamma=0.75
 restart_ep=10000
 
 meshsize=0.01
-lenx=0.8
-leny=0.8
+lenx=0.3
+leny=0.3
 delta_ratio=3.0
-df=pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_u_test1.csv", header=0, sep=' ')
+#df=pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_u_test1.csv", header=0, sep=' ')
+df=pd.read_csv("./"+base_dir+"/hom_u_test1.csv", header=0, sep=' ')
 X0=torch.tensor(df["x"], device=device)
 X1=torch.tensor(df["y"], device=device)
 ll=int(math.sqrt(X0.shape[0]))
@@ -303,7 +308,8 @@ X=torch.column_stack((X0,X1))
 
 E_ini=np.zeros(((ll-9)*(ll-9),1))*1.6
 #E_ini=np.loadtxt('/home/yiming/yiming_research/linear/best_E_step44.txt', delimiter='\t')
-E_gd=np.loadtxt('/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/smallsamples20/baby80_0', delimiter='\t')
+#E_gd=np.loadtxt('/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/smallsamples20/baby30_0', delimiter='\t')
+E_gd=np.loadtxt('./smallsamples20/baby30_0', delimiter='\t')
 E_gd=np.reshape(E_gd,(ll,ll))
 E_gd=np.reshape(E_gd[4:ll-5,4:ll-5],(-1,1))
 #E_gd=np.expand_dims(E_gd,axis=1)
