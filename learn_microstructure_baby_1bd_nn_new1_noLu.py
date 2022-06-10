@@ -242,7 +242,8 @@ meshsize=0.01
 lenx=0.8
 leny=0.8
 delta_ratio=3.0
-df=pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_u_test1.csv", header=0, sep=' ')
+#df=pd.read_csv("/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/"+base_dir+"/hom_u_test1.csv", header=0, sep=' ')
+df=pd.read_csv("./"+base_dir+"/hom_u_test1.csv", header=0, sep=' ')
 X0=torch.tensor(df["x"], device=device)
 X1=torch.tensor(df["y"], device=device)
 ll=int(math.sqrt(X0.shape[0]))
@@ -257,7 +258,8 @@ X=torch.column_stack((X0,X1))
 
 E_ini=np.zeros(((ll-9)*(ll-9),1))*1.6
 #E_ini=np.loadtxt('/home/yiming/yiming_research/linear/best_E_step44.txt', delimiter='\t')
-E_gd=np.loadtxt('/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/smallsamples20/baby80_0', delimiter='\t')
+#E_gd=np.loadtxt('/home/yiming/yiming_research/statebasedAC-master/statebasedAC-master/smallsamples20/baby30_0', delimiter='\t')
+E_gd=np.loadtxt('./smallsamples20/baby30_0', delimiter='\t')
 E_gd=np.reshape(E_gd,(ll,ll))
 E_gd=np.reshape(E_gd[4:ll-5,4:ll-5],(-1,1))
 #E_gd=np.expand_dims(E_gd,axis=1)
